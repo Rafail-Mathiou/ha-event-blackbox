@@ -1,0 +1,36 @@
+---
+name: Bug report
+description: A reproducible problem, described with made-up data only.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        **Please do not attach real data**: no logs, diagnostics, screenshots,
+        entity names, automations, locations, IP addresses or tokens from your
+        home. Describe the problem with made-up examples such as
+        `light.demo_hall` or `192.0.2.10`.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce with made-up data
+      description: The smallest set of steps, or a synthetic example.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Home Assistant and Event Blackbox version
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: This report contains no real household, personal or access data.
+          required: true

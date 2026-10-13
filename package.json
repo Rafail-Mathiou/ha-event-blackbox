@@ -1,0 +1,19 @@
+{
+  "name": "event-blackbox-frontend-checks",
+  "private": true,
+  "description": "Development checks for the Event Blackbox panel. Nothing here ships; the panel has no build step.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --max-warnings 0 custom_components/event_blackbox/frontend tests/frontend",
+    "types": "tsc --project tsconfig.json",
+    "test": "node --test \"tests/frontend/**/*.test.js\"",
+    "check": "npm run lint && npm run types && npm run test"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "typescript": "7.0.2"
+  }
+}

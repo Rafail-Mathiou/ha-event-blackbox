@@ -1,0 +1,7 @@
+---
+explain:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity: {}

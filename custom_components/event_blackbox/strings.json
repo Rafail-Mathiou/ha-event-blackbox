@@ -1,0 +1,71 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Event Blackbox",
+        "description": "Explains why an entity changed state, with clearly labelled evidence. A read-only debugging aid.\n\nSetting up turns nothing on: no recording, no storage, no actions. Choose what to record and turn it on in the Event Blackbox panel in the sidebar."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Event Blackbox is already configured. Only a single instance is allowed."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Event Blackbox options",
+        "description": "Collection is off by default. When enabled, only the selected entities and domains are observed, kept in memory only and limited by count, size and age. Observed events can reveal household routines.\n\nTip: the Event Blackbox panel in the sidebar offers the same settings with search and grouping by area or type.",
+        "data": {
+          "collection_enabled": "Enable collection (opt-in)",
+          "entities": "Entities to observe",
+          "domains": "Domains to observe",
+          "max_events": "Maximum events in memory",
+          "max_kib": "Maximum memory (KiB)",
+          "max_age_minutes": "Maximum age (minutes)",
+          "history_days": "Keep history across restarts (days, 0 = off)"
+        },
+        "data_description": {
+          "collection_enabled": "Nothing is observed unless this is on and at least one entity or domain is selected.",
+          "domains": "Sensitive domains (people, locations, cameras, locks, alarms, media) are not selected by default and need an extra confirmation. Broad domains such as sensor can also contain health or location values; numbers are never stored, but selecting single entities keeps the record smaller.",
+          "history_days": "Off by default. When set, the recorded events are also stored in Home Assistant's storage for up to this many days, so they survive restarts. The file is not encrypted, is part of backups and is deleted when you set this to 0, turn collection off or remove the integration."
+        }
+      },
+      "sensitive": {
+        "title": "Sensitive domains selected",
+        "description": "Your selection includes sensitive domains: {domains}.\n\nEvents from these domains can reveal presence, locations, access to the home or viewing habits. Only continue if everyone affected agrees.",
+        "data": {
+          "acknowledge_sensitive": "I understand and want to observe these domains"
+        }
+      }
+    },
+    "error": {
+      "allowlist_required": "Select at least one entity or domain, or turn collection off.",
+      "too_many_entities": "Select at most 200 entities.",
+      "invalid_entity_id": "One of the entity IDs is invalid.",
+      "invalid_domain": "One of the domains is not supported.",
+      "invalid_value": "Invalid value.",
+      "out_of_range": "The value is outside the allowed range.",
+      "acknowledgement_required": "Confirm the warning or go back and remove the sensitive domains."
+    }
+  },
+  "services": {
+    "explain": {
+      "name": "Explain a change",
+      "description": "Explains why an entity changed state the last time, from the events recorded since recording started. Read only, administrators only.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity",
+          "description": "An entity on the allowlist of Event Blackbox."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_recording": {
+      "message": "Event Blackbox is not recording. Turn on collection and select entities or domains in the options."
+    },
+    "not_on_allowlist": {
+      "message": "This entity is not on the allowlist of Event Blackbox, so its changes are not recorded."
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Event Blackbox einrichten",
+        "description": "Erklärt nachvollziehbar, warum sich eine Entity geändert hat, und kennzeichnet klar, wie gut die Ursache belegt ist. Ein reines Werkzeug zur Fehlersuche, das nur liest.\n\nDie Einrichtung schaltet nichts ein: keine Aufzeichnung, keine Speicherung, keine Aktionen. Was aufgezeichnet wird, wählst du im Event-Blackbox-Panel in der Seitenleiste."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Event Blackbox ist bereits eingerichtet. Es ist nur eine Instanz erlaubt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Event Blackbox Optionen",
+        "description": "Die Erfassung ist standardmäßig aus. Wenn aktiviert, werden nur die ausgewählten Entities und Domains beobachtet, nur im Arbeitsspeicher gehalten und nach Anzahl, Größe und Alter begrenzt. Beobachtete Ereignisse können Gewohnheiten im Haushalt offenlegen.\n\nTipp: Das Event-Blackbox-Panel in der Seitenleiste bietet dieselben Einstellungen mit Suche und Gruppierung nach Bereich oder Typ.",
+        "data": {
+          "collection_enabled": "Erfassung aktivieren (Opt-in)",
+          "entities": "Zu beobachtende Entities",
+          "domains": "Zu beobachtende Domains",
+          "max_events": "Maximale Anzahl Ereignisse im Speicher",
+          "max_kib": "Maximaler Speicher (KiB)",
+          "max_age_minutes": "Maximales Alter (Minuten)",
+          "history_days": "Verlauf über Neustarts behalten (Tage, 0 = aus)"
+        },
+        "data_description": {
+          "collection_enabled": "Es wird nichts beobachtet, solange dies aus ist oder keine Entity bzw. Domain ausgewählt ist.",
+          "domains": "Sensible Domains (Personen, Standorte, Kameras, Schlösser, Alarmanlagen, Medien) sind nicht vorausgewählt und brauchen eine zusätzliche Bestätigung. Breite Domains wie sensor können auch Gesundheits- oder Standortwerte enthalten; Zahlenwerte werden nie gespeichert, aber einzelne Entities halten die Aufzeichnung kleiner.",
+          "history_days": "Standardmäßig aus. Wenn gesetzt, werden die aufgezeichneten Ereignisse zusätzlich bis zu so viele Tage im Speicher von Home Assistant abgelegt und überstehen Neustarts. Die Datei ist nicht verschlüsselt, landet in Backups und wird gelöscht, wenn du 0 einstellst, die Erfassung ausschaltest oder die Integration entfernst."
+        }
+      },
+      "sensitive": {
+        "title": "Sensible Domains ausgewählt",
+        "description": "Deine Auswahl enthält sensible Domains: {domains}.\n\nEreignisse aus diesen Domains können Anwesenheit, Aufenthaltsorte, Zutritt zur Wohnung oder Sehgewohnheiten offenlegen. Fahre nur fort, wenn alle Betroffenen einverstanden sind.",
+        "data": {
+          "acknowledge_sensitive": "Ich habe das verstanden und möchte diese Domains beobachten"
+        }
+      }
+    },
+    "error": {
+      "allowlist_required": "Wähle mindestens eine Entity oder Domain aus oder schalte die Erfassung aus.",
+      "too_many_entities": "Wähle höchstens 200 Entities aus.",
+      "invalid_entity_id": "Eine der Entity-IDs ist ungültig.",
+      "invalid_domain": "Eine der Domains wird nicht unterstützt.",
+      "invalid_value": "Ungültiger Wert.",
+      "out_of_range": "Der Wert liegt außerhalb des erlaubten Bereichs.",
+      "acknowledgement_required": "Bestätige den Hinweis oder gehe zurück und entferne die sensiblen Domains."
+    }
+  },
+  "services": {
+    "explain": {
+      "name": "Änderung erklären",
+      "description": "Erklärt anhand der seit Start der Aufzeichnung erfassten Ereignisse, warum sich eine Entity zuletzt geändert hat. Nur lesend, nur für Administratoren.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity",
+          "description": "Eine Entity auf der Auswahlliste von Event Blackbox."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_recording": {
+      "message": "Event Blackbox zeichnet nicht auf. Aktiviere die Erfassung und wähle in den Optionen Entities oder Domains aus."
+    },
+    "not_on_allowlist": {
+      "message": "Diese Entity steht nicht auf der Auswahlliste von Event Blackbox, ihre Änderungen werden nicht aufgezeichnet."
+    }
+  }
+}

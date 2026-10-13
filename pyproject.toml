@@ -1,0 +1,113 @@
+[project]
+name = "ha-event-blackbox"
+version = "0.1.0"
+description = "Explains why an entity changed state, with explicitly labelled evidence quality. A read-only debugging aid."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+# Home Assistant 2026.10.1 requires Python >= 3.14.2.
+requires-python = ">=3.14.2"
+# The integration has no runtime requirements (manifest.json "requirements": []).
+dependencies = []
+
+[dependency-groups]
+# Direct pins; uv.lock pins the full resolved tree. Dependabot proposes updates.
+dev = [
+    # Needed by the frontend component in tests of the panel; same version as
+    # Home Assistant 2026.10.1 pins. Not a runtime requirement.
+    "home-assistant-frontend==20260930.3",
+    "mypy==2.4.0",
+    # Pins homeassistant==2026.10.1. The minimum supported version is tested
+    # by the "tests (minimum)" job in .github/workflows/ci.yml.
+    "pytest-homeassistant-custom-component==0.13.372",
+    "ruff==0.17.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "ANN",
+    "ASYNC",
+    "B",
+    "BLE",
+    "C4",
+    "D",
+    "DTZ",
+    "E",
+    "F",
+    "FBT",
+    "G",
+    "I",
+    "LOG",
+    "N",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "RET",
+    "RUF",
+    "S",
+    "SIM",
+    "T20",
+    "TC",
+    "TRY",
+    "UP",
+    "W",
+]
+ignore = [
+    "D203", # conflicts with D211
+    "D213", # conflicts with D212
+    "TRY003", # short inline exception messages are fine
+    "TC001", # typing-only imports: HA style keeps runtime imports
+    "TC002",
+    "TC003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "PLR2004", "SLF001"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+combine-as-imports = true
+known-first-party = ["custom_components"]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+warn_unreachable = true
+explicit_package_bases = true
+mypy_path = "."
+files = ["custom_components", "tests"]
+
+[[tool.mypy.overrides]]
+# Documented import paths of Home Assistant re-export these names without
+# listing them in __all__ (StaticPathConfig, require_admin, websocket_command).
+module = ["homeassistant.components.http", "homeassistant.components.websocket_api"]
+implicit_reexport = true
+
+[[tool.mypy.overrides]]
+# The HA test harness ships without a py.typed marker.
+module = ["pytest_homeassistant_custom_component.*"]
+follow_untyped_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+
+[tool.coverage.run]
+branch = true
+source = ["custom_components"]
+
+[tool.coverage.report]
+# HA quality scale (Silver) target for production code.
+fail_under = 95
+show_missing = true

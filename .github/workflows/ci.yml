@@ -1,0 +1,121 @@
+---
+# Pull request code gets no secrets and a read-only token. External actions are
+# pinned to full commit SHAs with the tag noted inline; Dependabot proposes updates.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: lint and types
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          python-version: "3.14"
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Formatting
+        run: uv run --frozen ruff format --check .
+      - name: Lint
+        run: uv run --frozen ruff check .
+      - name: Types
+        run: uv run --frozen mypy
+
+  tests:
+    name: tests (${{ matrix.label }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: HA 2026.10.1 (current)
+            harness: ""
+          - label: HA 2026.9.4 (minimum)
+            harness: "0.13.367"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          python-version: "3.14"
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Switch to the minimum supported Home Assistant
+        if: matrix.harness != ''
+        env:
+          HARNESS: ${{ matrix.harness }}
+        run: uv pip install "pytest-homeassistant-custom-component==${HARNESS}"
+      - name: Tests with coverage gate
+        run: uv run --no-sync pytest --cov --cov-report=term-missing
+
+  frontend:
+    name: frontend checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      - name: Install the pinned development tools
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: ESLint, type check and unit tests of the panel
+        run: npm run --silent check
+      - name: Audit of the development tools
+        run: npm audit --audit-level=low
+
+  hassfest:
+    name: hassfest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Official Home Assistant integration validation
+        # home-assistant/actions has no release tags; pinned to the master commit
+        # of 2026-10-12. Runs the ghcr.io/home-assistant/hassfest image.
+        uses: home-assistant/actions/hassfest@50baf3a307f87100cf550d4ae127746595030d5d # master
+
+  hacs:
+    name: HACS validation
+    # The HACS action reads files without authentication, so it cannot see a
+    # private repository. It runs as soon as the repository is public.
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: HACS repository validation
+        # Pinned to the commit of release 22.5.0; the action runs the
+        # ghcr.io/hacs/action image. It only reads the repository.
+        uses: hacs/action@d556e736723344f83838d08488c983a15381059a # 22.5.0
+        with:
+          category: integration
+          comment: "false"

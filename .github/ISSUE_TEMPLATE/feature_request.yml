@@ -1,0 +1,24 @@
+---
+name: Feature request
+description: An idea within the scope described in the README.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Data and risks
+      description: >-
+        Which data would be processed? What would the integration need
+        to do for it (listen to events, store data, add endpoints)?
+    validations:
+      required: true
