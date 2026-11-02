@@ -20,7 +20,7 @@ dev = [
     # Pins homeassistant==2026.10.1. The minimum supported version is tested
     # by the "tests (minimum)" job in .github/workflows/ci.yml.
     "pytest-homeassistant-custom-component==0.13.372",
-    "ruff==0.17.0",
+    "ruff==0.17.2",
 ]
 
 [tool.uv]
