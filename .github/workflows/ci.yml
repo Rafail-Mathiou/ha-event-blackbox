@@ -102,7 +102,7 @@ jobs:
       - name: Official Home Assistant integration validation
         # home-assistant/actions has no release tags; pinned to the master commit
         # of 2026-10-12. Runs the ghcr.io/home-assistant/hassfest image.
-        uses: home-assistant/actions/hassfest@50baf3a307f87100cf550d4ae127746595030d5d # master
+        uses: home-assistant/actions/hassfest@86d4564712fa02543c808e3a693dd04f9d3f8361 # master
 
   hacs:
     name: HACS validation
