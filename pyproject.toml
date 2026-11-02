@@ -15,7 +15,7 @@ dependencies = []
 dev = [
     # Needed by the frontend component in tests of the panel; same version as
     # Home Assistant 2026.10.1 pins. Not a runtime requirement.
-    "home-assistant-frontend==20260930.3",
+    "home-assistant-frontend==20260930.5",
     "mypy==2.4.0",
     # Pins homeassistant==2026.10.1. The minimum supported version is tested
     # by the "tests (minimum)" job in .github/workflows/ci.yml.
